@@ -1,10 +1,7 @@
 package com.example.hbase;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
@@ -76,6 +73,12 @@ public class TestApi {
         return exists;
     }
 
+    /**
+     * 创建表
+     * @param tableName
+     * @param cfs
+     * @throws IOException
+     */
     public static void createTable(String tableName,String... cfs) throws IOException {
 
         // 判断是否存在列族信息
@@ -106,6 +109,11 @@ public class TestApi {
         admin.createTable(hTableDescriptor);
     }
 
+    /**
+     * 删除表
+     * @param tableName
+     * @throws IOException
+     */
     public static void dropTable(String tableName) throws IOException {
 
         // 判断表是否存在
@@ -122,19 +130,41 @@ public class TestApi {
 
     }
 
+    /**
+     * 创建命名空间
+     * @param nameSpace
+     */
+    public static void createNameSpace(String nameSpace){
+        // 创建命名空间描述器
+        NamespaceDescriptor namespaceDescriptor = NamespaceDescriptor.create(nameSpace).build();
+
+        try {
+            admin.createNamespace(namespaceDescriptor);
+        }catch (NamespaceExistException e){
+            System.out.println("命名空间已存在！");
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("创建命名空间完成");
+    }
+
     public static void main(String[] args) throws IOException {
 
-        // 判断表是否存在
-        System.out.println(isTableExist("stu5"));
+        //// 判断表是否存在
+        //System.out.println(isTableExist("stu5"));
+        //
+        //// 创建表测试
+        //createTable("stu5","info1","info2");
+        //
+        //// 删除表测试
+        //dropTable("stu5");
+        //
+        //// 判断表是否存在
+        //System.out.println(isTableExist("stu5"));
 
-        // 创建表测试
-        createTable("stu5","info1","info2");
-
-        // 删除表测试
-        dropTable("stu5");
-
-        // 判断表是否存在
-        System.out.println(isTableExist("stu5"));
+        createNameSpace("0920");
 
         // 关闭资源
         close();
