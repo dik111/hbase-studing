@@ -2,10 +2,8 @@ package com.example.hbase;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.Admin;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
 
@@ -150,6 +148,30 @@ public class TestApi {
         System.out.println("创建命名空间完成");
     }
 
+    /**
+     * 向表插入数据
+     * @param tableName
+     * @param rowKey
+     * @param cf 列族
+     * @param cn 列名
+     * @param value
+     */
+    public static void putData(String tableName,String rowKey,String cf,String cn,String value) throws IOException {
+
+        // 获取表对象
+        Table table = connection.getTable(TableName.valueOf(tableName));
+
+        // 创建put对象
+        Put put = new Put(Bytes.toBytes(rowKey));
+
+        // 给put对象赋值
+        put.addColumn(Bytes.toBytes(cf),Bytes.toBytes(cn),Bytes.toBytes(value));
+
+        table.put(put);
+
+        table.close();
+    }
+
     public static void main(String[] args) throws IOException {
 
         //// 判断表是否存在
@@ -164,8 +186,9 @@ public class TestApi {
         //// 判断表是否存在
         //System.out.println(isTableExist("stu5"));
 
-        createNameSpace("0920");
+        //createNameSpace("0920");
 
+        putData("student","1004","info","name","zhangsan4");
         // 关闭资源
         close();
     }
