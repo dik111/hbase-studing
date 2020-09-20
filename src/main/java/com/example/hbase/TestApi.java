@@ -106,6 +106,22 @@ public class TestApi {
         admin.createTable(hTableDescriptor);
     }
 
+    public static void dropTable(String tableName) throws IOException {
+
+        // 判断表是否存在
+        if (!isTableExist(tableName)){
+            System.out.println(tableName+"表不存在！");
+            return;
+        }
+
+        // 使表下线
+        admin.disableTable(TableName.valueOf(tableName));
+
+        // 删除表
+        admin.deleteTable(TableName.valueOf(tableName));
+
+    }
+
     public static void main(String[] args) throws IOException {
 
         // 判断表是否存在
@@ -113,6 +129,9 @@ public class TestApi {
 
         // 创建表测试
         createTable("stu5","info1","info2");
+
+        // 删除表测试
+        dropTable("stu5");
 
         // 判断表是否存在
         System.out.println(isTableExist("stu5"));
